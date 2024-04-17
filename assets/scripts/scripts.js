@@ -4,8 +4,6 @@ function fInicio() {
     fRellenaCombo('#al_cursos', 'al_cur_id');
     fRellenaCombo('#as_cursos', 'as_cur_id');
 
-    fMostrarForm('#div_asignaturas')
-
 }
 
 function fMostrarForm(nombre_de_cual_con_almohadilla) {
@@ -43,7 +41,7 @@ function fRellenaCombo(donde_lo_dejo, como_se_llama) {
 function fMostrarCursos() {
     // Sacar titulo
     let titulo = "CURSOS ( ";
-    titulo += `<span onclick="fPreparaFormCursos('a', 0)">`
+    titulo += `<span onclick="fPreparaFormCursos('a', 0, '',0)">`
     titulo+= `<i class="fas fa-plus" title="Añadir curso"></i>`
     titulo+= `</span>`;
     titulo += " )";
@@ -67,8 +65,12 @@ function fMostrarCursos() {
                 html += `<td>${item.cur_nombre}</td>`
                 html += `<td>${item.cur_plazas}</td>`
                 html += `<td>`
-                html += `<i class="fas fa-trash"></i>`
-                html += `<i class="fas fa-edit"></i>`
+                html += `<span onclick="fPreparaFormCursos('b',${item.cur_id}, '${item.cur_nombre}', ${item.cur_plazas})">`
+                html += `<i class="fas fa-trash" title="borrar" ${item.cur_nombre}></i>`
+                html += `</span>`
+                html += `<span onclick="fPreparaFormCursos('m',${item.cur_id}, '${item.cur_nombre}', ${item.cur_plazas})">` // SE PONE COMILLAS EN EL NOMBRE PORQUE ES UN STRING
+                html += `<i class="fas fa-edit" title="modificar" ${item.cur_nombre}></i>`
+                html += `</span>`
                 html += `</td>`
                 html += "</tr>"
             });
@@ -76,37 +78,51 @@ function fMostrarCursos() {
             document.querySelector("#section_table").innerHTML = html;
         })
 }
-function fPreparaFormCursos(para_que, id) {
+function fPreparaFormCursos(para_que, id, ant_nombre, ant_plazas) {
     // Guardar id
     document.querySelector("#cur_id").value = id;
     // Borrar errores anteriores
     document.querySelector("#cur_error").innerHTML = ' ';
+    document.querySelector("#cur_nombre").value = ant_nombre;
+    document.querySelector("#cur_plazas").value = ant_plazas;
     // Analizar para_que
-    if (para_que = 'a') {
-        document.querySelector("#cur_nombre").value = ' ';
-        document.querySelector("#cur_plazas").value = ' ';
-        document.querySelector("#cur_A").style.display = "block"
-        document.querySelector("#cur_M").style.display = "none"
-        document.querySelector("#cur_B").style.display = "none"
+    if (para_que == 'a') {
+        document.querySelector("#cur_A").style.display = "block";
+        document.querySelector("#cur_M").style.display = "none";
+        document.querySelector("#cur_B").style.display = "none";
     }
+
+    if (para_que == 'b') {
+        document.querySelector("#cur_A").style.display = "none";
+        document.querySelector("#cur_M").style.display = "none";
+        document.querySelector("#cur_B").style.display = "block";
+    }
+
+    if (para_que =='m') {
+        document.querySelector("#cur_A").style.display = "none";
+        document.querySelector("#cur_M").style.display = "block";
+        document.querySelector("#cur_B").style.display = "none";
+    }
+
+
     fMostrarForm("#div_cursos")
 }
-function fCRUD(operacion) {
+function fCRUDCursos(operacion) {
     let sql = "";
-    let cur_id = document.querySelector("#cur_id").value;
-    let cur_nombre = document.querySelector("#cur_nombre").value;
-    let cur_plazas = document.querySelector("#cur_plazas").value;
+    let id = document.querySelector("#cur_id").value;
+    let nombre = document.querySelector("#cur_nombre").value;
+    let plazas = document.querySelector("#cur_plazas").value;
     // VALIDAR CAMPOS
     if (operacion == 'a') {
-        sql = `INSERT INTO cursos VALUES (null, '${cur_nombre}', '${cur_plazas}')`;
+        sql = `INSERT INTO cursos VALUES (null, '${nombre}', '${plazas}')`;
     }
 
     if (operacion == 'm') {
-        sql = "UPDATE cursos SET cur_nombre = WHERE";
+        sql = `UPDATE cursos SET cur_nombre ='${nombre}', cur_plazas='${plazas}' WHERE cur_id = ${id}`;
     }
 
     if (operacion == 'b') {
-        sql = "DELETE FROM cursos WHERE";
+        sql = `DELETE FROM cursos WHERE cur_id = ${id}`;
     }
     // Enviar sql al servidor
     let URL = "assets/php/servidor.php?";
@@ -120,6 +136,12 @@ function fCRUD(operacion) {
         .then((response) => response.json())
         .then((data) => {
             console.log("CRUD CURSOS", data)
+    })
+    .finally (()=> {
+
+        fOcultarForm();
+        fMostrarCursos();
+
     });
 }
 function fMostrarAsignaturas() {
@@ -136,17 +158,15 @@ function fMostrarAsignaturas() {
             html += "<th>DESCRIPCIÓN<th>" // No sacar en formato tabla nunca
             html += "</tr>"
             data.datos.forEach(item => {
-                if (item.as_nombre == null) {
-                    item.as_nombre = "";
-                }
-                if (item.as_descripcion == null) {
-                    item.as_descripcion = "";
-                }
+
+                if (item.as_id != null){
                 html += "<tr>"
                 html += `<td>${item.as_nombre}</td>`
                 html += `<td>${item.cur_nombre}</td>`
                 html += `<td>${item.as_descripcion}</td>`
                 html += "</tr>"
+                };
+
             });
             html += "</table>"
             document.querySelector("section").innerHTML = html;
@@ -198,3 +218,4 @@ function fCursos() {
     let posicion = document.querySelector("#combo_cursos").selectedIndex;
     console.log(valor, posicion)
 }
+
