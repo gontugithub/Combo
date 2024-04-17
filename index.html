@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia</title>
+    <link rel="stylesheet" href="assets/estilos/estilos.css">
+    <link rel="stylesheet" href="assets/estilos/modal.css">
+    <script src="assets/scripts/scripts.js"></script>
+    <link rel="stylesheet" href="assets/fontawesome-free-5.15.4-web/css/all.css">
+    <script src="assets/fontawesome-free-5.15.4-web/js/all.js"></script>
+</head>
+<body onload="fInicio()">
+    <div id="div_modal">
+        <div id="div_cursos" class="form">
+            <!-- id, nombre, plazas -->
+            <input type="hidden" id="cur_id">
+            <label for="cur_nombre">Nombre</label>
+            <input type="text" id="cur_nombre" autocomplete="off" maxlength="50" class="input"> <br>
+            <label for="cur_plazas">Plazas</label>
+            <input type="number" id="cur_plazas" value="20" min="5" max="30" class="input">
+            <p id="cur_error" class="frm_error">&nbsp;ERROR</p>
+
+            <div class="botonera">
+                <div onclick="fOcultarForm()">Cancelar</div>
+                <div id="cur_A" onclick="fCRUD('a')">Añadir</div>
+                <div id="cur_M" onclick="fCRUD('m')">Modificar</div>
+                <div id="cur_B" onclick="fCRUD('b')">Borrar</div>
+            </div>
+        </div>
+        <div id="div_asignaturas" class="form">
+            <input type="hidden" id="as_id">
+            <!-- Preparo el sitio para el combo -->
+            <label for="as_cur_id">Curso</label>
+            <div id="as_cursos"></div>
+            
+            <label for="as_nombre">Nombre</label>
+            <input type="text" id="as_nombre" autocomplete="off" maxlength="50" class="input">
+
+            <label for="as_descripcion">Descripción</label>
+            <textarea id="as_descripcion" class="input"></textarea>
+            <p id="as_error" class="frm_error">&nbsp;ERROR</p>
+
+            <div class="botonera">
+                <div onclick="fOcultarForm()">Cancelar</div>
+                <div id="as_A">Añadir</div>
+                <div id="as_M">Modificar</div>
+                <div id="as_B">Borrar</div>
+            </div>
+        </div>
+        <div id="div_alumnos" class="form">
+            <input type="hidden" id="as_id">
+            <!-- Preparo el sitio para el combo -->
+            <label for="al_cur_id">Curso</label>
+            <div id="al_cursos"></div>
+            
+            <label for="al_nombre">Nombre</label>
+            <input type="text" id="al_nombre" autocomplete="off" maxlength="50" class="input">
+
+            <label for="al_apellidos">Apellidos</label>
+            <input type="text" id="al_apellidos" autocomplete="off" maxlength="50" class="input">
+
+            <label for="al_fnac">Fecha de nacimiento</label>
+            <input type="text" id="al_fnac" class="input">
+            <p id="al_error" class="frm_error">&nbsp;ERROR</p>
+
+            <div class="botonera">
+                <div onclick="fOcultarForm()">Cancelar</div>
+                <div id="al_A">Añadir</div>
+                <div id="al_M">Modificar</div>
+                <div id="al_B">Borrar</div>
+            </div>
+        </div>
+    </div>
+    <header></header>
+    <aside>
+        <div onclick="fMostrarCursos()">Cursos</div>
+        <div onclick="fMostrarAsignaturas()">Asignaturas</div>
+        <div onclick="fMostrarAlumnos()">Alumnos</div>
+    </aside>
+    <section>
+        <div id="section_titulo"></div>
+        <div id="section_table"></div>
+    </section>
+    <footer>&copy;Claudia Candelas - 2024</footer>
+</body>
+</html>
